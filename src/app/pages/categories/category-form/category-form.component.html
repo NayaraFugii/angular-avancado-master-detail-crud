@@ -10,7 +10,7 @@
 <div class="row mb-4">
   <div class="col-md">
       <h1 class="h2 border-left p1-2">
-          Formulário de Categoria
+          Formulário de Categoria  {{currentAction}}
       </h1>
   </div>
   <div class="col-md">
@@ -20,10 +20,10 @@
   </div>
 </div>
 
-<form>
+<form [formGroup] = "categoryForm">
   <div class="card">
     <div class="card-header">
-      Informações sobre a categoria 
+      Informações sobre a categoria
     </div>
     <div class="card-body">
       <div class="form-row">
