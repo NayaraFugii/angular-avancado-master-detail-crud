@@ -66,7 +66,7 @@ export class EntryService { ///classe=>objeto>propriedades
   }
 
   private jsonDataToEntry(jsonData: any): Entry {
-    return bject.assign(new Entry(), jsonData)
+    return Object.assign(new Entry(), jsonData)
   }
 
   private handleError(error: any): Observable<any>{
