@@ -4,6 +4,8 @@ import { HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
 import { map, catchError, flatMap } from "rxjs/operators";
 
+import { CategoryService} from "../../categories/shared/category.service"
+
 import { Entry } from "./entry.models";
 
 @Injectable({
@@ -13,7 +15,8 @@ export class EntryService { ///classe=>objeto>propriedades
 
   private apiPath: string = "api/entries" //não pode ser alterada "private"
 
-  constructor(private http: HttpClient) { } //funções dentro da classe são chamadas de metodos
+  constructor(private http: HttpClient,
+    private CategoryService: CategoryService) { } //funções dentro da classe são chamadas de metodos
 
   getAll(): Observable<Entry[]>{
     return this.http.get(this.apiPath).pipe( // outras informações são chamadas de propŕiedades
@@ -31,20 +34,33 @@ export class EntryService { ///classe=>objeto>propriedades
   }
 
   create(entry: Entry): Observable<Entry>{
-    return this.http.post(this.apiPath, entry).pipe(
-      catchError(this.handleError),      
-      map(this.jsonDataToEntry)
-    )
+       return this.CategoryService.getById(entry.categoryId).pipe(
+        flatMap(category => {
+          entry.category = category;
+
+          return this.http.post(this.apiPath, entry).pipe(
+            catchError(this.handleError),      
+            map(this.jsonDataToEntry)
+          )
+        })
+      )  
   }
 
   update(entry: Entry): Observable<Entry>{
     const url = `${this.apiPath}/${entry.id}`;
 
-    return this.http.put(url, entry).pipe(
-      catchError(this.handleError),
-      map(()=> entry)
-    )
+    return this.CategoryService.getById(entry.categoryId).pipe(
+      flatMap(category => {
+        entry.category = category;
+
+        return this.http.put(url, entry).pipe(
+          catchError(this.handleError),
+          map(()=> entry)
+        )
+      })
+    )    
   }
+
 
   delete(id: number): Observable<any>{
     const url = `${this.apiPath}/${id}`;
