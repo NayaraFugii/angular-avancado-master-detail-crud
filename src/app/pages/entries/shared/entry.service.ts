@@ -74,3 +74,8 @@ export class EntryService { ///classe=>objeto>propriedades
   return throwError(error);
   }
 }
+
+
+
+
+
